@@ -10,8 +10,84 @@
  */
 
 const GrowNex = (() => {
+  // ---------- demo mode (online preview) ----------
+  // On Vercel, or if the C++ server is not running, there is no /api to talk
+  // to. In that case the site switches to a read-only preview that reads the
+  // sample businesses and products from js/demo-data.js.
+  const LOCAL_ONLY_MESSAGE =
+    "This is only available when running locally. Download GrowNex from GitHub and start the C++ server to use accounts, products and enquiries.";
+
+  let demoMode = false;
+  let modeCheck = null;
+
+  // Asks the C++ server once whether it is there. Every API call waits for this.
+  function checkServer() {
+    if (!modeCheck) {
+      modeCheck = fetch("/api/categories", { credentials: "same-origin" })
+        .then((response) => (response.ok ? response.json() : null))
+        .then((json) => json && json.ok === true)
+        .catch(() => false)
+        .then((serverFound) => {
+          demoMode = !serverFound && Boolean(window.GROWNEX_DEMO);
+          document.documentElement.classList.toggle("demo-mode", demoMode);
+          return demoMode;
+        });
+    }
+    return modeCheck;
+  }
+
+  // Answers the same /api/... paths as the C++ server, using the sample data.
+  function demoApi(path, options = {}) {
+    const data = window.GROWNEX_DEMO;
+    if ((options.method || "GET") !== "GET") return Promise.reject(new Error(LOCAL_ONLY_MESSAGE));
+
+    const url = new URL(path, "http://demo.local");
+    const q = (url.searchParams.get("q") || "").trim().toLowerCase();
+    const category = url.searchParams.get("category") || "";
+    const has = (text) => String(text).toLowerCase().includes(q);
+    const businessName = (id) => (data.businesses.find((b) => b.id === id) || {}).businessName || "Unknown business";
+    const withCount = (b) => ({ ...b, productCount: data.products.filter((p) => p.businessId === b.id).length });
+    const withSeller = (p) => ({ ...p, businessName: businessName(p.businessId) });
+    const newestFirst = [...data.products].sort((a, b) => b.id - a.id).map(withSeller);
+    const notFound = (message) => Promise.reject(Object.assign(new Error(message), { status: 404 }));
+    let match;
+
+    if (url.pathname === "/api/me") return Promise.resolve({ ok: true, loggedIn: false });
+    if (url.pathname === "/api/categories") return Promise.resolve({ ok: true, categories: data.categories });
+
+    if (url.pathname === "/api/businesses") {
+      const list = data.businesses
+        .filter((b) => !category || b.category === category)
+        .filter((b) => !q || has(b.businessName) || has(b.city) || has(b.description))
+        .map(withCount);
+      return Promise.resolve({ ok: true, businesses: list });
+    }
+    if ((match = url.pathname.match(/^\/api\/businesses\/(\d+)$/))) {
+      const b = data.businesses.find((x) => x.id === Number(match[1]));
+      if (!b) return notFound("This business could not be found.");
+      return Promise.resolve({ ok: true, business: withCount(b), products: newestFirst.filter((p) => p.businessId === b.id) });
+    }
+    if (url.pathname === "/api/products") {
+      const limit = Number(url.searchParams.get("limit")) || 0;
+      let list = newestFirst
+        .filter((p) => !category || p.category === category)
+        .filter((p) => !q || has(p.name) || has(p.category) || has(p.description) || has(p.businessName));
+      if (limit > 0) list = list.slice(0, limit);
+      return Promise.resolve({ ok: true, products: list });
+    }
+    if ((match = url.pathname.match(/^\/api\/products\/(\d+)$/))) {
+      const p = newestFirst.find((x) => x.id === Number(match[1]));
+      if (!p) return notFound("This product could not be found. It may have been removed.");
+      const b = data.businesses.find((x) => x.id === p.businessId);
+      return Promise.resolve({ ok: true, product: p, business: b ? withCount(b) : null });
+    }
+    return Promise.reject(new Error(LOCAL_ONLY_MESSAGE));
+  }
+
   // ---------- API helper ----------
   async function api(path, options = {}) {
+    if (await checkServer()) return demoApi(path, options);
+
     const request = { method: options.method || "GET", headers: {}, credentials: "same-origin" };
 
     if (options.data) {
@@ -212,6 +288,10 @@ const GrowNex = (() => {
   function renderAccount() {
     const area = document.getElementById("nav-account");
     if (!area) return;
+    if (demoMode) {
+      area.innerHTML = "";   // no accounts in the online preview
+      return;
+    }
     if (!currentUser) {
       area.innerHTML =
         '<a class="btn btn-quiet" href="login.html">Log in</a>' +
@@ -252,6 +332,12 @@ const GrowNex = (() => {
   // Sends people who are not logged in (or have the wrong role) to login.
   async function requireRole(role) {
     const user = await ready();
+    if (demoMode) {
+      const main = document.getElementById("main");
+      main.innerHTML = '<div class="container section"></div>';
+      showLocalOnly(main.firstChild, "Dashboards are only available when running locally");
+      return null;
+    }
     if (!user) {
       window.location.href = "login.html?next=" + encodeURIComponent(location.pathname.replace(/^\//, ""));
       return null;
@@ -275,12 +361,33 @@ const GrowNex = (() => {
     }
     const year = document.getElementById("year");
     if (year) year.textContent = new Date().getFullYear();
+
+    // In the online preview, show one line under the header saying so.
+    checkServer().then((isDemo) => {
+      const header = document.querySelector(".site-header");
+      if (!isDemo || !header) return;
+      const note = document.createElement("div");
+      note.className = "demo-banner";
+      note.innerHTML =
+        '<div class="container">Online preview with sample businesses. Accounts, product management and enquiries are only available when running locally.</div>';
+      header.after(note);
+    });
   });
+
+  // Replaces a page area with the "only available when running locally" message.
+  function showLocalOnly(container, title) {
+    container.innerHTML =
+      '<div class="empty-state"><h3>' + esc(title || "Only available when running locally") + "</h3>" +
+      "<p>" + esc(LOCAL_ONLY_MESSAGE) + "</p>" +
+      '<a class="btn btn-primary" href="explore.html">Browse products</a></div>';
+  }
 
   return {
     api, esc, price, stock, initials, param, icon, productCard, businessCard,
     toast, showFormError, clearFormError, setBusy, fillCategorySelect,
-    ready, requireRole, dashboardFor,
+    ready, requireRole, dashboardFor, checkServer, showLocalOnly,
+    LOCAL_ONLY_MESSAGE,
+    get demoMode() { return demoMode; },
     get user() { return currentUser; },
   };
 })();

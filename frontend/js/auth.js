@@ -13,6 +13,12 @@
 
   // Someone already logged in does not need these pages.
   ready().then((user) => {
+    // Online preview: there are no accounts, so explain instead of showing a form.
+    if (GrowNex.demoMode) {
+      const card = document.querySelector(".auth-card");
+      if (card) GrowNex.showLocalOnly(card, "Accounts are only available when running locally");
+      return;
+    }
     if (user) window.location.href = safeNext() || dashboardFor(user);
   });
 
@@ -93,6 +99,8 @@
     if (param("role") === "business") document.getElementById("role-business").checked = true;
     if (param("role") !== "business") document.body.removeAttribute("data-nav");
     await fillCategorySelect(document.getElementById("category"), "Choose a category");
+    // In the online preview the form has been replaced by a message by now.
+    if (!document.body.contains(registerForm)) return;
     updateRole();
 
     registerForm.addEventListener("submit", (event) => {

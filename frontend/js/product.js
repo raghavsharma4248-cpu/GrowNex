@@ -53,6 +53,12 @@
   const user = await ready();
   const here = encodeURIComponent("product.html?id=" + id);
 
+  if (GrowNex.demoMode) {
+    area.innerHTML =
+      '<p class="panel-note" style="margin:0">Enquiries are only available when running locally. In the full version, customers log in and send their question to ' +
+      esc(product.businessName) + " from here.</p>";
+    return;
+  }
   if (!user) {
     area.innerHTML =
       "<p>Log in with a customer account to ask " + esc(product.businessName) + " about this product.</p>" +

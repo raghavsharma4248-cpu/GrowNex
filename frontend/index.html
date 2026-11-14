@@ -27,7 +27,7 @@
         <ul class="nav-links">
           <li><a href="explore.html" data-nav="products">Products</a></li>
           <li><a href="explore.html?view=businesses" data-nav="businesses">Businesses</a></li>
-          <li><a href="register.html?role=business" data-nav="owners">For business owners</a></li>
+          <li data-server-only><a href="register.html?role=business" data-nav="owners">For business owners</a></li>
         </ul>
         <div class="nav-account" id="nav-account"></div>
       </nav>
@@ -49,7 +49,7 @@
             </label>
             <button class="btn btn-primary" type="submit">Search products</button>
           </form>
-          <p class="hero-note">Run a small business? <a href="register.html?role=business">List it on GrowNex for free</a>.</p>
+          <p class="hero-note" data-server-only>Run a small business? <a href="register.html?role=business">List it on GrowNex for free</a>.</p>
         </div>
 
         <aside class="ledger" aria-labelledby="ledger-title">
@@ -85,7 +85,7 @@
               <li><div><strong>Add your products</strong><span>Name, category, description, price and how many you have.</span></div></li>
               <li><div><strong>Read customer enquiries</strong><span>Each enquiry shows the product, the question and the customer's email.</span></div></li>
             </ol>
-            <a class="btn btn-primary" href="register.html?role=business">List your business</a>
+            <a class="btn btn-primary" href="register.html?role=business" data-server-only>List your business</a>
           </div>
           <div class="how-col">
             <h3>For customers</h3>
@@ -95,7 +95,7 @@
               <li><div><strong>Check price and stock</strong><span>Every product shows its price and the quantity the seller has listed.</span></div></li>
               <li><div><strong>Send an enquiry</strong><span>Log in as a customer and ask the business a question about a product.</span></div></li>
             </ol>
-            <a class="btn btn-secondary" href="register.html?role=customer">Create a customer account</a>
+            <a class="btn btn-secondary" href="register.html?role=customer" data-server-only>Create a customer account</a>
           </div>
         </div>
       </div>
@@ -152,7 +152,7 @@
             <li><a href="explore.html?view=businesses">Browse businesses</a></li>
           </ul>
         </div>
-        <div>
+        <div data-server-only>
           <h2>Account</h2>
           <ul>
             <li><a href="login.html">Log in</a></li>
@@ -167,6 +167,7 @@
       </div>
     </div>
   </footer>
+  <script src="js/demo-data.js"></script>
   <script src="js/app.js"></script>
   <script src="js/home.js"></script>
 </body>

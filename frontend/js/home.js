@@ -23,7 +23,7 @@
             "</a></li>"
         )
         .join("");
-      count.textContent = "Updated live";
+      count.textContent = GrowNex.demoMode ? "Sample data" : "Updated live";
     }
   } catch (error) {
     list.innerHTML = '<li class="ledger-empty">' + esc(error.message) + "</li>";

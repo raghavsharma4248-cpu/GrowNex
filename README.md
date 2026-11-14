@@ -18,16 +18,17 @@ The frontend is plain HTML and CSS with a little vanilla JavaScript. The backend
 4. [Folder structure](#folder-structure)
 5. [How the frontend talks to the C++ backend](#how-the-frontend-talks-to-the-c-backend)
 6. [OOP design](#oop-design)
-7. [Installation](#installation)
-8. [Build and run](#build-and-run)
-9. [Setting up VS Code](#setting-up-vs-code)
-10. [Demo accounts](#demo-accounts)
-11. [API reference](#api-reference)
-12. [Data files](#data-files)
-13. [Security](#security)
-14. [Testing checklist](#testing-checklist)
-15. [Troubleshooting](#troubleshooting)
-16. [Limitations](#limitations)
+7. [Online preview (Vercel)](#online-preview-vercel)
+8. [Installation](#installation)
+9. [Build and run](#build-and-run)
+10. [Setting up VS Code](#setting-up-vs-code)
+11. [Demo accounts](#demo-accounts)
+12. [API reference](#api-reference)
+13. [Data files](#data-files)
+14. [Security](#security)
+15. [Testing checklist](#testing-checklist)
+16. [Troubleshooting](#troubleshooting)
+17. [Limitations](#limitations)
 
 ---
 
@@ -193,6 +194,19 @@ Step by step:
 | **Polymorphism** | `User` declares pure virtual functions: `getRole()`, `dashboardPage()`, `toJson()` and `serialize()`. `Server::findUserByEmail()` returns a `User*` that points to either a `Business` or a `Customer`. `handleLogin()` calls `user->dashboardPage()` and `user->toJson()` without knowing which it is, and C++ runs the right version at run time. |
 | **Abstraction** | `User` cannot be created on its own (it has pure virtual functions). `FileManager` hides how files are read and written; the server only calls `loadProducts()` / `saveProducts()`. |
 | **Templates (bonus)** | `FileManager::loadAll<T>()` and `Server::nextId<T>()` work for any record class. |
+
+---
+
+## Online preview (Vercel)
+
+The `frontend` folder can also be hosted on its own, for example on Vercel, as a **read-only preview**:
+
+- Each page first asks the C++ server whether it is there (`/api/categories`). If there is no answer, the site switches to demo mode and reads the sample businesses and products from `frontend/js/demo-data.js`.
+- Browsing, search, category filters, business pages and product pages work.
+- Login, registration, dashboards and enquiries show "only available when running locally".
+- When the C++ server is running, demo mode is never used and everything works as described above.
+
+Vercel settings: **Root Directory** = `frontend`, **Framework Preset** = Other, no build command.
 
 ---
 
@@ -437,7 +451,7 @@ Every item below was tested end to end, both through the API with `curl` and in 
 | `undefined reference to __imp_WSA...` (Windows) | Add `-lws2_32` at the **end** of the compile command. |
 | `cpp-httplib doesn't support Windows 8 or lower` | Add `-D_WIN32_WINNT=0x0A00` to the compile command and use Windows 10 or 11. |
 | Page says "Cannot reach the GrowNex server" | The C++ program is not running. Start it and refresh. |
-| Opening the HTML file by double-clicking does not work | Pages must be opened through `http://localhost:8080`, not as `file:///...`, so the API calls can reach the server. |
+| Site shows "Online preview" while testing locally | The C++ server is not running, or the page was opened by double-clicking the file. Start `grownex` and open `http://localhost:8080`. |
 | Fonts look plain | The Schibsted Grotesk font loads from Google Fonts. Offline, the site falls back to a system font; everything still works. |
 
 ---

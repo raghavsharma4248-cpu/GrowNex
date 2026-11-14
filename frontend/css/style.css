@@ -888,3 +888,16 @@ a.ledger-row:hover { background: var(--navy-50); color: inherit; }
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---------- 14. Online preview (demo mode) ----------
+   Added to <html> by app.js when the C++ server cannot be reached. */
+.demo-banner {
+  background: var(--green-50);
+  border-bottom: 1px solid #cfe6d9;
+  color: var(--green-700);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  padding: var(--space-2) 0;
+}
+.demo-mode [data-server-only] { display: none !important; }
+.auth-card .empty-state { border: 0; padding: var(--space-5) 0; }
