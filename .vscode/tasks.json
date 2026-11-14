@@ -1,0 +1,67 @@
+{
+  // VS Code tasks for GrowNex.
+  //   Ctrl + Shift + B          -> Build GrowNex
+  //   Terminal > Run Task...    -> Run GrowNex / Run GrowNex with demo data
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build GrowNex",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-std=c++17", "-O2", "-Wall",
+        "-Ibackend/include", "-Ibackend/lib",
+        "backend/src/main.cpp",
+        "backend/src/Server.cpp",
+        "backend/src/FileManager.cpp",
+        "backend/src/User.cpp",
+        "backend/src/Business.cpp",
+        "backend/src/Customer.cpp",
+        "backend/src/Product.cpp",
+        "backend/src/Enquiry.cpp",
+        "backend/src/Security.cpp",
+        "backend/src/Utils.cpp",
+        "-o", "grownex", "-pthread"
+      ],
+      "windows": {
+        "command": "g++",
+        "args": [
+          "-std=c++17", "-O2", "-Wall", "-D_WIN32_WINNT=0x0A00",
+          "-Ibackend/include", "-Ibackend/lib",
+          "backend/src/main.cpp",
+          "backend/src/Server.cpp",
+          "backend/src/FileManager.cpp",
+          "backend/src/User.cpp",
+          "backend/src/Business.cpp",
+          "backend/src/Customer.cpp",
+          "backend/src/Product.cpp",
+          "backend/src/Enquiry.cpp",
+          "backend/src/Security.cpp",
+          "backend/src/Utils.cpp",
+          "-o", "grownex.exe", "-lws2_32"
+        ]
+      },
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Run GrowNex",
+      "type": "shell",
+      "command": "./grownex",
+      "windows": { "command": ".\\grownex.exe" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Run GrowNex with demo data",
+      "type": "shell",
+      "command": "./grownex --seed",
+      "windows": { "command": ".\\grownex.exe --seed" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "isBackground": true,
+      "problemMatcher": []
+    }
+  ]
+}

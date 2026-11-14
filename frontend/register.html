@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' rx='7' fill='%230f2240'/%3E%3Crect x='7' y='15' width='3.5' height='6' rx='1' fill='%23fff'/%3E%3Crect x='12.25' y='11' width='3.5' height='10' rx='1' fill='%23fff'/%3E%3Crect x='17.5' y='7' width='3.5' height='14' rx='1' fill='%236fbf98'/%3E%3C/svg%3E">
+  <title>Create an account | GrowNex</title>
+</head>
+<body data-nav="owners">
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <svg viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#0f2240"/><rect x="7" y="15" width="3.5" height="6" rx="1" fill="#fff"/><rect x="12.25" y="11" width="3.5" height="10" rx="1" fill="#fff"/><rect x="17.5" y="7" width="3.5" height="14" rx="1" fill="#6fbf98"/></svg>
+        GrowNex
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="visually-hidden">Open menu</span>
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <ul class="nav-links">
+          <li><a href="explore.html" data-nav="products">Products</a></li>
+          <li><a href="explore.html?view=businesses" data-nav="businesses">Businesses</a></li>
+          <li><a href="register.html?role=business" data-nav="owners">For business owners</a></li>
+        </ul>
+        <div class="nav-account" id="nav-account"></div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="page-surface">
+    <div class="auth-wrap">
+      <div class="auth-card">
+        <h1>Create your account</h1>
+        <p>It takes about a minute. Fields marked <span class="required" aria-hidden="true">*</span><span class="visually-hidden">with an asterisk</span> are required.</p>
+
+        <form class="form" id="register-form" novalidate>
+          <div class="form-error" role="alert" tabindex="-1"></div>
+
+          <fieldset class="role-choice">
+            <legend>I am joining as</legend>
+            <div class="role-options">
+              <div class="role-option">
+                <input type="radio" name="role" id="role-business" value="business">
+                <label for="role-business"><strong>Business owner</strong><span>List my business and products</span></label>
+              </div>
+              <div class="role-option">
+                <input type="radio" name="role" id="role-customer" value="customer" checked>
+                <label for="role-customer"><strong>Customer</strong><span>Browse and send enquiries</span></label>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="field">
+            <label for="name">Your full name <span class="required" aria-hidden="true">*</span></label>
+            <input class="input" type="text" id="name" name="name" autocomplete="name" required minlength="2" maxlength="60">
+          </div>
+
+          <div class="field">
+            <label for="email">Email <span class="required" aria-hidden="true">*</span></label>
+            <input class="input" type="email" id="email" name="email" autocomplete="email" required maxlength="100">
+          </div>
+
+          <div class="field">
+            <label for="password">Password <span class="required" aria-hidden="true">*</span></label>
+            <div class="password-wrap">
+              <input class="input" type="password" id="password" name="password" autocomplete="new-password" required minlength="8" maxlength="64" aria-describedby="password-hint">
+              <button class="password-toggle" type="button" data-password-toggle aria-controls="password" aria-pressed="false">Show</button>
+            </div>
+            <p class="hint" id="password-hint">At least 8 characters, with at least one letter and one number.</p>
+          </div>
+
+          <div id="business-fields" hidden>
+            <div class="form" style="gap: var(--space-4)">
+              <div class="field">
+                <label for="businessName">Business name <span class="required" aria-hidden="true">*</span></label>
+                <input class="input" type="text" id="businessName" name="businessName" autocomplete="organization" minlength="2" maxlength="80">
+              </div>
+              <div class="form-row">
+                <div class="field">
+                  <label for="category">Category <span class="required" aria-hidden="true">*</span></label>
+                  <select class="select" id="category" name="category"></select>
+                </div>
+                <div class="field">
+                  <label for="phone">Business phone <span class="required" aria-hidden="true">*</span></label>
+                  <input class="input" type="tel" id="phone" name="phone" autocomplete="tel" maxlength="16" aria-describedby="phone-hint">
+                  <p class="hint" id="phone-hint">Shown on your public profile.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="city">City <span class="required" aria-hidden="true">*</span></label>
+            <input class="input" type="text" id="city" name="city" autocomplete="address-level2" required minlength="2" maxlength="50">
+          </div>
+
+          <button class="btn btn-primary btn-block" type="submit" id="register-button">Create customer account</button>
+        </form>
+
+        <p class="auth-switch">Already registered? <a href="login.html">Log in</a></p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="index.html">
+            <svg viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#0f2240"/><rect x="7" y="15" width="3.5" height="6" rx="1" fill="#fff"/><rect x="12.25" y="11" width="3.5" height="10" rx="1" fill="#fff"/><rect x="17.5" y="7" width="3.5" height="14" rx="1" fill="#6fbf98"/></svg>
+            GrowNex
+          </a>
+          <p>A free storefront for small businesses and startups, built around UN Sustainable Development Goal 8: Decent Work and Economic Growth.</p>
+        </div>
+        <div>
+          <h2>Explore</h2>
+          <ul>
+            <li><a href="explore.html">Browse products</a></li>
+            <li><a href="explore.html?view=businesses">Browse businesses</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Account</h2>
+          <ul>
+            <li><a href="login.html">Log in</a></li>
+            <li><a href="register.html?role=customer">Register as a customer</a></li>
+            <li><a href="register.html?role=business">List your business</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; <span id="year">2026</span> GrowNex</span>
+        <span>GrowNex lists products and enquiries only. No orders or payments are taken.</span>
+      </div>
+    </div>
+  </footer>
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

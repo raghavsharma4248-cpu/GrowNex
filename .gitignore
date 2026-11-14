@@ -1,0 +1,24 @@
+# ---- Compiled program ----
+grownex
+grownex.exe
+*.exe
+*.o
+*.obj
+*.out
+build/
+
+# ---- Personal data ----
+# The .txt files hold real accounts (names, emails, password hashes),
+# so they are never committed. The empty data folder is kept by .gitkeep.
+data/*.txt
+
+# ---- Editor and system files ----
+.vscode/*
+!.vscode/tasks.json
+!.vscode/c_cpp_properties.json
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+*.log
