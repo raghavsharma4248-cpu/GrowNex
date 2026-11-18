@@ -466,6 +466,15 @@ Every item below was tested end to end, both through the API with `curl` and in 
 
 ---
 
+## Team
+
+| Name |
+|---|
+| Raghav Sharma |
+| Asif Mirza |
+
+---
+
 ## Credits
 
 - [cpp-httplib](https://github.com/yhirose/cpp-httplib) by Yuji Hirose, MIT licence (`backend/lib/httplib.h`)
